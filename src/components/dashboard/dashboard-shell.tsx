@@ -8,7 +8,7 @@ export function DashboardShell({ children }: ChildrenProps) {
       <div className="min-w-0">
         <header className="flex h-18 items-center justify-between border-b border-slate-200/80 bg-white px-5 sm:px-8 lg:px-10">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Operations workspace</p>
+            <p className="text-xs font-semibold text-slate-400">Operations workspace</p>
             <p className="mt-0.5 text-sm font-medium text-slate-700">Community commerce</p>
           </div>
           <div className="flex items-center gap-3">

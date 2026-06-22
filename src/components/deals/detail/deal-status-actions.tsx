@@ -41,6 +41,17 @@ function isDecisionDisabled(
   return currentStatus === decision;
 }
 
+function getPendingDecision(
+  isPending: boolean,
+  decision: DealDecision | undefined,
+) {
+  if (isPending) {
+    return decision;
+  }
+
+  return undefined;
+}
+
 function getActionLabel(
   action: DealDecision,
   pendingDecision: DealDecision | undefined,
@@ -64,16 +75,17 @@ export function DealStatusActions({ dealId, status }: DealStatusActionsProps) {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (decision: DealDecision) => setDealDecision(dealId, decision),
-    onSuccess: async (updatedDeal) => {
+    onSuccess: (updatedDeal) => {
       queryClient.setQueryData(dealKeys.detail(dealId), updatedDeal);
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: dealKeys.detail(dealId) }),
-        queryClient.invalidateQueries({ queryKey: dealKeys.all }),
-      ]);
+      void queryClient.invalidateQueries({ queryKey: dealKeys.detail(dealId) });
+      void queryClient.invalidateQueries({ queryKey: dealKeys.all });
     },
   });
 
-  const pendingDecision = mutation.variables;
+  const pendingDecision = getPendingDecision(
+    mutation.isPending,
+    mutation.variables,
+  );
 
   return (
     <div>
